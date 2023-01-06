@@ -14,6 +14,7 @@ public class MouseLook : MonoBehaviour
 
     void Start()
     {
+        // Locks mouse cursor and makes it invisible:
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -26,18 +27,21 @@ public class MouseLook : MonoBehaviour
     }
 
     void GetInput()
-    {
+    {   
+        // Obtains mouse horizontal input
         xMousePos = Input.GetAxisRaw("Mouse X");
     }
 
     void ModifyInput()
-    {
+    {   
+        // Smoothes mouse input
         xMousePos *= sensitivity * smoothing;
         smoothedMousePos = Mathf.Lerp(smoothedMousePos, xMousePos, 1f / smoothing);
     }
 
     void MovePlayer()
     {
+        // Calculates player move direction based on mouse position and rotation
         currentLookingPos += smoothedMousePos;
         transform.localRotation = Quaternion.AngleAxis(currentLookingPos, transform.up);
     }

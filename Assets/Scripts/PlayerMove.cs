@@ -6,6 +6,8 @@ public class PlayerMove : MonoBehaviour
 {   
     [SerializeField] private float playerSpeed = 20f;
     [SerializeField] private CharacterController myCC;
+    [SerializeField] private Animator camAnim;
+    [SerializeField] private bool isWalking;
 
     [SerializeField] private Vector3 inputVector;
     [SerializeField] private Vector3 movementVector;
@@ -19,16 +21,22 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
        GetInput();
-       MovePlayer(); 
+       MovePlayer();
+       CheckForHeadBob();
+
+       // Updates boolean Animation Parameter based on movement detected
+       // by 'CheckForHeadBob()' in order to trigger animation
+       camAnim.SetBool("isWalking", isWalking);
     }
 
     void GetInput()
-    {
+    {   
+        // Generates movement vector based on keyboard input
         inputVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         inputVector.Normalize();
         inputVector = transform.TransformDirection(inputVector);
 
-        // Movement vector + Gravity vector
+        // Improves movement vector by adding gravity calculation
         movementVector = (inputVector * playerSpeed) + (Vector3.up * myGravity);
     }
 
@@ -37,5 +45,15 @@ public class PlayerMove : MonoBehaviour
         myCC.Move(movementVector * Time.deltaTime);
     }
 
+    void CheckForHeadBob()
+    {
+        if (myCC.velocity.magnitude > 0.1f)
+        {
+            isWalking = true;
+        } else
+        {
+            isWalking = false;
+        }
+    }
 
 }
