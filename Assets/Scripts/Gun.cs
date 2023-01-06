@@ -9,10 +9,12 @@ public class Gun : MonoBehaviour
     [SerializeField] private float fireRate = 1f;
     [SerializeField] private float nextTimeToFire;
     [SerializeField] private float damage = 1f;
+    [SerializeField] private float gunShotRadius= 20f;
 
     [SerializeField] private BoxCollider gunTrigger;    
     [SerializeField] private EnemyManager enemyManager;
-    [SerializeField] private LayerMask raycastLayerMask; // Raycast will ignore the 'Gun' layer, but will affect the 'Default' layer
+    [SerializeField] private LayerMask raycastLayerMask; // In inspector:  raycast will ignore the 'Gun' layer, but will affect the 'Default' and 'Enemy' layers
+    [SerializeField] private LayerMask enemyLayerMask; // In inspector: raycast must affect only this layer
 
     void Start()
     {
@@ -30,7 +32,22 @@ public class Gun : MonoBehaviour
     }
 
     void Fire()
-    {
+    {   
+        // Simulate gun shot radius
+        Collider[] enemyColliders;
+        enemyColliders = Physics.OverlapSphere(transform.position, gunShotRadius, enemyLayerMask);
+
+        // Alerts nearby enemies when gun is fired:
+        // loops through the generated list of enemies and activates aggro
+        foreach (var enemyCollider in enemyColliders)
+        {
+            enemyCollider.GetComponent<EnemyAwareness>().isAggro = true;
+        }
+        
+        // Test audio
+        GetComponent<AudioSource>().Stop();
+        GetComponent<AudioSource>().Play();
+        
         // Damages all enemies inside the 'enemiesInTrigger' list
         foreach (var enemy in enemyManager.enemiesInTrigger)
         {   
