@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {   
     [SerializeField] private float playerSpeed = 20f;
+    [SerializeField] private float momentumDamping = 5f;
     [SerializeField] private CharacterController myCC;
     [SerializeField] private Animator camAnim;
     [SerializeField] private bool isWalking;
@@ -22,7 +23,6 @@ public class PlayerMove : MonoBehaviour
     {
        GetInput();
        MovePlayer();
-       CheckForHeadBob();
 
        // Updates boolean Animation Parameter based on movement detected
        // by 'CheckForHeadBob()' in order to trigger animation
@@ -31,10 +31,30 @@ public class PlayerMove : MonoBehaviour
 
     void GetInput()
     {   
-        // Generates movement vector based on keyboard input
-        inputVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-        inputVector.Normalize();
-        inputVector = transform.TransformDirection(inputVector);
+        // If player holds down W-A-S-D, then give -1, 0, 1
+        if (
+            Input.GetKey(KeyCode.W) ||
+            Input.GetKey(KeyCode.A) ||
+            Input.GetKey(KeyCode.S) ||
+            Input.GetKey(KeyCode.D)
+            )
+        {   
+            // Generates movement vector based on keyboard input
+            inputVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+            inputVector.Normalize();
+            inputVector = transform.TransformDirection(inputVector);
+
+            isWalking = true; // Triggers head bob animation on player movement
+
+        } else
+        {   
+            // Adds momentum to player movement:
+            // If player is NOT holding down W-A-S-D then give
+            // last checked InputVector and lerp it towards zero
+            inputVector = Vector3.Lerp(inputVector, Vector3.zero, momentumDamping * Time.deltaTime);
+
+            isWalking = false; // Stops head bob animation
+        }        
 
         // Improves movement vector by adding gravity calculation
         movementVector = (inputVector * playerSpeed) + (Vector3.up * myGravity);
@@ -43,17 +63,6 @@ public class PlayerMove : MonoBehaviour
     void MovePlayer()
     {
         myCC.Move(movementVector * Time.deltaTime);
-    }
-
-    void CheckForHeadBob()
-    {
-        if (myCC.velocity.magnitude > 0.1f)
-        {
-            isWalking = true;
-        } else
-        {
-            isWalking = false;
-        }
     }
 
 }
