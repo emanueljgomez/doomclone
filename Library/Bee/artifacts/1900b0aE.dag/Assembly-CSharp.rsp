@@ -358,6 +358,7 @@
 "Assets/Scripts/EnemyManager.cs"
 "Assets/Scripts/Gun.cs"
 "Assets/Scripts/MouseLook.cs"
+"Assets/Scripts/PlayerHealth.cs"
 "Assets/Scripts/PlayerMove.cs"
 -langversion:9.0
 

@@ -736,6 +736,7 @@ GameObject:
   - component: {fileID: 828338785}
   - component: {fileID: 828338787}
   - component: {fileID: 828338788}
+  - component: {fileID: 828338789}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -816,6 +817,22 @@ MonoBehaviour:
   xMousePos: 0
   smoothedMousePos: 0
   currentLookingPos: 0
+--- !u!114 &828338789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828338784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e2f3d7b545fe8c49b782d60698b4153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  health: 100
+  maxArmor: 100
+  armor: 0
 --- !u!1 &935259748
 GameObject:
   m_ObjectHideFlags: 0
